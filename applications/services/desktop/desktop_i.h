@@ -70,6 +70,8 @@ struct Desktop {
     FuriPubSubSubscription* app_start_stop_subscription;
     FuriPubSub* input_events_pubsub;
     FuriPubSubSubscription* input_events_subscription;
+    FuriPubSub* ascii_events_pubsub;
+    FuriPubSubSubscription* ascii_events_subscription;
     FuriTimer* auto_lock_timer;
     FuriTimer* update_clock_timer;
 
