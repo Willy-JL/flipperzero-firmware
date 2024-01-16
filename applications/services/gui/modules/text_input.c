@@ -428,6 +428,48 @@ static bool text_input_view_input_callback(InputEvent* event, void* context) {
     return consumed;
 }
 
+static bool text_input_view_ascii_callback(AsciiEvent* event, void* context) {
+    TextInput* text_input = context;
+    furi_assert(text_input);
+
+    switch(event->value) {
+    case _AsciiValueSOH: // Ctrl A
+        with_view_model(
+            text_input->view,
+            TextInputModel * model,
+            { model->clear_default_text = !model->clear_default_text; },
+            true);
+        return true;
+    default: // Look in keyboard
+        for(size_t r = 0; r < keyboard_row_count; r++) {
+            const TextInputKey* row = get_row(r);
+            uint8_t size = get_row_size(r);
+            for(size_t key = 0; key < size; key++) {
+                char lower = row[key].text;
+                char upper = char_to_uppercase(lower);
+                if(event->value == lower || event->value == upper) {
+                    with_view_model(
+                        text_input->view,
+                        TextInputModel * model,
+                        {
+                            model->selected_row = r;
+                            model->selected_column = key;
+                            bool shift =
+                                (event->value == upper) !=
+                                (model->clear_default_text || strlen(model->text_buffer) == 0);
+                            text_input_handle_ok(text_input, model, shift);
+                        },
+                        true);
+                    return true;
+                }
+            }
+        }
+        break;
+    }
+
+    return false;
+}
+
 void text_input_timer_callback(void* context) {
     furi_assert(context);
     TextInput* text_input = context;
@@ -446,6 +488,7 @@ TextInput* text_input_alloc() {
     view_allocate_model(text_input->view, ViewModelTypeLocking, sizeof(TextInputModel));
     view_set_draw_callback(text_input->view, text_input_view_draw_callback);
     view_set_input_callback(text_input->view, text_input_view_input_callback);
+    view_set_ascii_callback(text_input->view, text_input_view_ascii_callback);
 
     text_input->timer = furi_timer_alloc(text_input_timer_callback, FuriTimerTypeOnce, text_input);
 
