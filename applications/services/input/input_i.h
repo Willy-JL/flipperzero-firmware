@@ -33,6 +33,7 @@ typedef struct {
 typedef struct {
     FuriThreadId thread_id;
     FuriPubSub* event_pubsub;
+    FuriPubSub* ascii_pubsub;
     InputPinState* pin_states;
     Cli* cli;
     volatile uint32_t counter;

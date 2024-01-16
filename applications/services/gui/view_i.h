@@ -16,6 +16,7 @@ typedef struct {
 struct View {
     ViewDrawCallback draw_callback;
     ViewInputCallback input_callback;
+    ViewAsciiCallback ascii_callback;
     ViewCustomCallback custom_callback;
 
     ViewModelType model_type;
@@ -42,6 +43,9 @@ void view_draw(View* view, Canvas* canvas);
 
 /** Input Callback for View dispatcher */
 bool view_input(View* view, InputEvent* event);
+
+/** Ascii Callback for View dispatcher */
+bool view_ascii(View* view, AsciiEvent* event);
 
 /** Custom Callback for View dispatcher */
 bool view_custom(View* view, uint32_t event);

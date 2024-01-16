@@ -40,7 +40,8 @@
 
 #define GUI_THREAD_FLAG_DRAW (1 << 0)
 #define GUI_THREAD_FLAG_INPUT (1 << 1)
-#define GUI_THREAD_FLAG_ALL (GUI_THREAD_FLAG_DRAW | GUI_THREAD_FLAG_INPUT)
+#define GUI_THREAD_FLAG_ASCII (1 << 2)
+#define GUI_THREAD_FLAG_ALL (GUI_THREAD_FLAG_DRAW | GUI_THREAD_FLAG_INPUT | GUI_THREAD_FLAG_ASCII)
 
 ARRAY_DEF(ViewPortArray, ViewPort*, M_PTR_OPLIST);
 
@@ -71,6 +72,8 @@ struct Gui {
     // Input
     FuriMessageQueue* input_queue;
     FuriPubSub* input_events;
+    FuriMessageQueue* ascii_queue;
+    FuriPubSub* ascii_events;
     uint8_t ongoing_input;
     ViewPort* ongoing_input_view_port;
 };
