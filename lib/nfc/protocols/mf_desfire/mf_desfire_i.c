@@ -54,7 +54,7 @@ bool mf_desfire_version_parse(MfDesfireVersion* data, const BitBuffer* buf) {
         bit_buffer_write_bytes(buf, data, sizeof(MfDesfireVersion));
     }
 
-    return can_parse && (data->hw_type & 0x0F) == 0x01;
+    return can_parse && ((data->hw_type & 0x0F) == 0x01 || (data->hw_type & 0x0F) == 0x08);
 }
 
 bool mf_desfire_free_memory_parse(MfDesfireFreeMemory* data, const BitBuffer* buf) {

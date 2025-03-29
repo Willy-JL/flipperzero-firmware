@@ -35,6 +35,7 @@ typedef enum {
     MfDesfireTypeEV2,
     MfDesfireTypeEV2XL,
     MfDesfireTypeEV3,
+    MfDesfireTypeLight,
 
     MfDesfireTypeUnknown,
     MfDesfireTypeNum,

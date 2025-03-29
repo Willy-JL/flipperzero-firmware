@@ -20,6 +20,7 @@ const MfDesfireData* mf_desfire_poller_get_data(MfDesfirePoller* instance) {
 static MfDesfirePoller* mf_desfire_poller_alloc(Iso14443_4aPoller* iso14443_4a_poller) {
     MfDesfirePoller* instance = malloc(sizeof(MfDesfirePoller));
     instance->iso14443_4a_poller = iso14443_4a_poller;
+    instance->command_mode = NxpNativeCommandModeIsoWrapped;
     instance->data = mf_desfire_alloc();
     instance->tx_buffer = bit_buffer_alloc(MF_DESFIRE_BUF_SIZE);
     instance->rx_buffer = bit_buffer_alloc(MF_DESFIRE_BUF_SIZE);

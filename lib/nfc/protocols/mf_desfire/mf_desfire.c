@@ -32,6 +32,7 @@ static const char* mf_desfire_type_strings[] = {
     [MfDesfireTypeEV2] = "EV2",
     [MfDesfireTypeEV2XL] = "EV2 XL",
     [MfDesfireTypeEV3] = "EV3",
+    [MfDesfireTypeLight] = "Light",
     [MfDesfireTypeUnknown] = "UNK",
 };
 
@@ -272,23 +273,28 @@ bool mf_desfire_is_equal(const MfDesfireData* data, const MfDesfireData* other) 
 static MfDesfireType mf_desfire_get_type_from_version(const MfDesfireVersion* const version) {
     MfDesfireType type = MfDesfireTypeUnknown;
 
-    switch(version->hw_major) {
-    case MF_DESFIRE_HW_MAJOR_TYPE_EV1:
-        type = MfDesfireTypeEV1;
-        break;
-    case MF_DESFIRE_HW_MAJOR_TYPE_EV2:
-        type = MfDesfireTypeEV2;
-        break;
-    case MF_DESFIRE_HW_MAJOR_TYPE_EV2_XL:
-        type = MfDesfireTypeEV2XL;
-        break;
-    case MF_DESFIRE_HW_MAJOR_TYPE_EV3:
-        type = MfDesfireTypeEV3;
-        break;
-    default:
-        if(MF_DESFIRE_TEST_TYPE_MF3ICD40(version->hw_major, version->hw_minor, version->hw_storage))
-            type = MfDesfireTypeMF3ICD40;
-        break;
+    if((version->hw_type & 0x0F) == 0x08) {
+        type = MfDesfireTypeLight;
+    } else {
+        switch(version->hw_major) {
+        case MF_DESFIRE_HW_MAJOR_TYPE_EV1:
+            type = MfDesfireTypeEV1;
+            break;
+        case MF_DESFIRE_HW_MAJOR_TYPE_EV2:
+            type = MfDesfireTypeEV2;
+            break;
+        case MF_DESFIRE_HW_MAJOR_TYPE_EV2_XL:
+            type = MfDesfireTypeEV2XL;
+            break;
+        case MF_DESFIRE_HW_MAJOR_TYPE_EV3:
+            type = MfDesfireTypeEV3;
+            break;
+        default:
+            if(MF_DESFIRE_TEST_TYPE_MF3ICD40(
+                   version->hw_major, version->hw_minor, version->hw_storage))
+                type = MfDesfireTypeMF3ICD40;
+            break;
+        }
     }
 
     return type;
